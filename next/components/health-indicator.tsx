@@ -10,9 +10,8 @@ export function HealthIndicator() {
   useEffect(() => {
     const checkHealth = async () => {
       try {
-        const response = await fetch("http://localhost:8080/actuator/health");
-        const data = await response.json();
-        setIsHealthy(data.status === "UP");
+        const response = await fetch("http://localhost:8080/api/health");
+        setIsHealthy(response.ok);
       } catch {
         setIsHealthy(false);
       } finally {
