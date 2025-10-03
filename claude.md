@@ -104,6 +104,7 @@ chw-reservation-front/
 - **들여쓰기**: 2칸 스페이스
 - **타입 안정성**: `strict: true` 모드
 - **경로 별칭**: `@/*`로 절대 경로 사용 가능
+- **텍스트 언어**: 모든 UI 텍스트는 영어로 작성
 
 #### ESLint 설정
 - **확장**: `next/core-web-vitals`, `next/typescript`
