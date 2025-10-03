@@ -152,6 +152,7 @@ npm run start
 - [ ] TypeScript 에러 없는지 확인
 - [ ] ESLint 에러 없는지 확인
 - [ ] **커밋 진행 (커밋 메시지는 한글로 작성)**
+- [ ] **개발 서버가 실행 중이라면 재시작 (Ctrl+C 후 `npm run dev`)**
 
 ### 전체 검증 스크립트
 ```bash
