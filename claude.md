@@ -1,18 +1,18 @@
-# CHW Reservation Project - Claude AI 가이드
+# Project Cron - Claude AI 가이드
 
 ## 프로젝트 구조
 
-이 프로젝트는 모노레포로 구성된 풀스택 예약 시스템입니다:
+이 프로젝트는 모노레포로 구성된 풀스택 크론잡 시스템입니다:
 
 ```
-chw-reservation/
-├── chw-reservation-back/   # Spring Boot 백엔드
-└── chw-reservation-front/  # Next.js 프론트엔드
+project-cron/
+├── spring/   # Spring Boot 백엔드
+└── next/     # Next.js 프론트엔드
 ```
 
 ---
 
-## 백엔드 (chw-reservation-back)
+## 백엔드 (spring)
 
 ### 기술 스택
 - **프레임워크**: Spring Boot 3.5.6
@@ -29,11 +29,13 @@ chw-reservation/
 
 #### 패키지 구조
 ```
-swacc0101.chwreservationback/
+devacc11011.spring/
+├── config/       # 설정 클래스
+└── controller/   # REST 컨트롤러
 ```
 
 #### Java 코딩 스타일
-- **클래스명**: PascalCase (예: `ChwReservationBackApplication`)
+- **클래스명**: PascalCase (예: `Application`)
 - **메서드/변수명**: camelCase
 - **상수**: UPPER_SNAKE_CASE
 - **들여쓰기**: 탭 사용
@@ -42,7 +44,7 @@ swacc0101.chwreservationback/
 ### 빌드 및 검증 명령어
 
 ```bash
-cd chw-reservation-back
+cd spring
 
 # 프로젝트 빌드 (테스트 포함)
 ./gradlew build
@@ -62,7 +64,7 @@ cd chw-reservation-back
 - Service 레이어의 모든 public 메서드는 테스트 필수
 - Controller 레이어의 모든 엔드포인트는 테스트 필수
 - Repository 레이어의 커스텀 쿼리는 테스트 필수
-- 테스트 클래스명: `{클래스명}Test` (예: `ReservationServiceTest`)
+- 테스트 클래스명: `{클래스명}Test` (예: `ApplicationTest`)
 - 테스트 메서드명: 한글 또는 영문으로 명확하게 작성
 - Given-When-Then 패턴 권장
 
@@ -74,7 +76,7 @@ cd chw-reservation-back
 
 ---
 
-## 프론트엔드 (chw-reservation-front)
+## 프론트엔드 (next)
 
 ### 기술 스택
 - **프레임워크**: Next.js 15.5.4 (App Router)
@@ -87,11 +89,13 @@ cd chw-reservation-back
 
 #### 디렉토리 구조
 ```
-chw-reservation-front/
+next/
 ├── app/              # Next.js App Router
 │   ├── layout.tsx
 │   ├── page.tsx
 │   └── globals.css
+├── components/       # 재사용 가능한 컴포넌트
+├── lib/              # 유틸리티 함수
 ├── public/           # 정적 파일
 └── node_modules/
 ```
@@ -105,6 +109,7 @@ chw-reservation-front/
 - **타입 안정성**: `strict: true` 모드
 - **경로 별칭**: `@/*`로 절대 경로 사용 가능
 - **텍스트 언어**: 모든 UI 텍스트는 영어로 작성
+- **Turbopack**: Next.js 빌드 및 개발 서버에서 Turbopack 사용
 
 #### ESLint 설정
 - **확장**: `next/core-web-vitals`, `next/typescript`
@@ -113,15 +118,15 @@ chw-reservation-front/
 ### 빌드 및 검증 명령어
 
 ```bash
-cd chw-reservation-front
+cd next
 
-# 개발 서버 실행
+# 개발 서버 실행 (Turbopack 사용)
 npm run dev
 
 # 린트 검사
 npm run lint
 
-# 프로덕션 빌드
+# 프로덕션 빌드 (Turbopack 사용)
 npm run build
 
 # 프로덕션 실행
@@ -140,15 +145,15 @@ npm run start
 
 ### 백엔드 작업 후
 - [ ] 새로운 기능에 대한 유닛 테스트 작성
-- [ ] `cd chw-reservation-back && ./gradlew test` 실행하여 테스트 통과 확인
-- [ ] `cd chw-reservation-back && ./gradlew build` 실행
+- [ ] `cd spring && ./gradlew test` 실행하여 테스트 통과 확인
+- [ ] `cd spring && ./gradlew build` 실행
 - [ ] 모든 테스트 통과 확인
 - [ ] Java 컨벤션 준수 확인
 - [ ] **커밋 진행 (커밋 메시지는 한글로 작성)**
 
 ### 프론트엔드 작업 후
-- [ ] `cd chw-reservation-front && npm run lint` 실행
-- [ ] `cd chw-reservation-front && npm run build` 실행
+- [ ] `cd next && npm run lint` 실행
+- [ ] `cd next && npm run build` 실행
 - [ ] TypeScript 에러 없는지 확인
 - [ ] ESLint 에러 없는지 확인
 - [ ] **커밋 진행 (커밋 메시지는 한글로 작성)**
@@ -157,7 +162,7 @@ npm run start
 ### 전체 검증 스크립트
 ```bash
 # 루트 디렉토리에서 실행
-cd chw-reservation-back && ./gradlew build && cd ../chw-reservation-front && npm run lint && npm run build
+cd spring && ./gradlew build && cd ../next && npm run lint && npm run build
 ```
 
 ---
@@ -165,8 +170,8 @@ cd chw-reservation-back && ./gradlew build && cd ../chw-reservation-front && npm
 ## 추가 정보
 
 - **Git 브랜치**: `main`
-- **프로젝트 위치**: `/Users/seongwoncha/Desktop/workspace/chw-reservation`
-- **백엔드 포트**: (설정 필요)
+- **프로젝트 위치**: `/Users/seongwoncha/Desktop/workspace/project-cron`
+- **백엔드 포트**: 8080 (기본값)
 - **프론트엔드 포트**: 3000 (개발 모드)
 
 ---
