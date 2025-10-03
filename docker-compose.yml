@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./spring
+      dockerfile: Dockerfile
+    image: project-cron-backend:latest
+    container_name: project-cron-backend
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    networks:
+      - project-cron-network
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./next
+      dockerfile: Dockerfile
+    image: project-cron-frontend:latest
+    container_name: project-cron-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_API_URL=http://backend:8080
+    depends_on:
+      - backend
+    networks:
+      - project-cron-network
+    restart: unless-stopped
+
+networks:
+  project-cron-network:
+    driver: bridge
