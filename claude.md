@@ -144,12 +144,14 @@ npm run start
 - [ ] `cd chw-reservation-back && ./gradlew build` 실행
 - [ ] 모든 테스트 통과 확인
 - [ ] Java 컨벤션 준수 확인
+- [ ] **커밋 진행 (커밋 메시지는 한글로 작성)**
 
 ### 프론트엔드 작업 후
 - [ ] `cd chw-reservation-front && npm run lint` 실행
 - [ ] `cd chw-reservation-front && npm run build` 실행
 - [ ] TypeScript 에러 없는지 확인
 - [ ] ESLint 에러 없는지 확인
+- [ ] **커밋 진행 (커밋 메시지는 한글로 작성)**
 
 ### 전체 검증 스크립트
 ```bash
