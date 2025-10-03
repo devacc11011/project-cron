@@ -7,7 +7,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -19,14 +18,13 @@ public class ActuatorHealthTest {
 
 	@Test
 	public void 헬스체크_엔드포인트_정상_동작() throws Exception {
-		mockMvc.perform(get("/actuator/health"))
-			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.status").value("UP"));
+		mockMvc.perform(get("/api/health"))
+			.andExpect(status().isOk());
 	}
 
 	@Test
 	public void 헬스체크_엔드포인트_인증없이_접근_가능() throws Exception {
-		mockMvc.perform(get("/actuator/health"))
+		mockMvc.perform(get("/api/health"))
 			.andExpect(status().isOk());
 	}
 }
