@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     environment {
-        REMOTE_HOST = 'your-remote-host'  // 원격 머신 IP 또는 도메인
-        REMOTE_USER = 'your-remote-user'  // 원격 머신 사용자
+        REMOTE_HOST = '10.0.0.10'  // 원격 머신 IP 또는 도메인
+        REMOTE_USER = 'ubuntu'  // 원격 머신 사용자
         SSH_CREDENTIALS_ID = 'ssh-credentials'  // Jenkins에 등록된 SSH credentials ID
 
         BACKEND_IMAGE = "project-cron-backend"
