@@ -15,7 +15,7 @@ COPY spring/ ./
 RUN gradle build --no-daemon -x test
 
 # 실행 스테이지
-FROM eclipse-temurin:17-jre-alpine
+FROM eclipse-temurin:17-jre
 
 WORKDIR /app
 
