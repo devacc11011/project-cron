@@ -159,6 +159,11 @@ npm run start
 - [ ] **커밋 진행 (커밋 메시지는 한글로 작성)**
 - [ ] **개발 서버가 실행 중이라면 재시작 (Ctrl+C 후 `npm run dev`)**
 
+### ⚠️ 중요: 모든 작업 완료 후
+- [ ] **반드시 git commit 실행**
+- [ ] 커밋 메시지는 한글로 작성
+- [ ] 작업 내용을 명확하게 요약
+
 ### 전체 검증 스크립트
 ```bash
 # 루트 디렉토리에서 실행
@@ -173,6 +178,10 @@ cd spring && ./gradlew build && cd ../next && npm run lint && npm run build
 - **프로젝트 위치**: `/Users/seongwoncha/Desktop/workspace/project-cron`
 - **백엔드 포트**: 8080 (기본값)
 - **프론트엔드 포트**: 3000 (개발 모드)
+
+### 도메인 정보
+- **프론트엔드 URL**: https://acron.lisan-al-gaib.top/
+- **백엔드 API URL**: https://acron-api.lisan-al-gaib.top/
 
 ---
 
