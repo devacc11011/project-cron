@@ -44,15 +44,27 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 	}
 
 	private User createNewUser(String discordId, String username, String email, String avatarUrl) {
+		// 첫 번째 사용자인지 확인
+		boolean isFirstUser = userRepository.count() == 0;
+
 		Role userRole = roleRepository.findByName("USER")
 			.orElseGet(() -> roleRepository.save(Role.builder().name("USER").description("일반 사용자").build()));
+
+		Set<Role> roles = Set.of(userRole);
+
+		// 첫 번째 사용자라면 ADMIN 권한 추가
+		if (isFirstUser) {
+			Role adminRole = roleRepository.findByName("ADMIN")
+				.orElseGet(() -> roleRepository.save(Role.builder().name("ADMIN").description("관리자").build()));
+			roles = Set.of(userRole, adminRole);
+		}
 
 		User user = User.builder()
 			.discordId(discordId)
 			.username(username)
 			.email(email)
 			.avatarUrl(avatarUrl)
-			.roles(Set.of(userRole))
+			.roles(roles)
 			.build();
 
 		return userRepository.save(user);

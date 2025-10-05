@@ -29,6 +29,28 @@ export interface NoticeRequest {
   content: string;
 }
 
+export interface Task {
+  id: number;
+  title: string;
+  prompt: string;
+  result: string | null;
+  status: string;
+  aiProvider: string;
+  user: {
+    discordId: string;
+    username: string;
+  };
+  createdAt: string;
+  updatedAt: string;
+  executedAt: string | null;
+}
+
+export interface TaskRequest {
+  title: string;
+  prompt: string;
+  aiProvider?: string;
+}
+
 export const api = {
   async getCurrentUser(): Promise<User | null> {
     try {
@@ -159,6 +181,99 @@ export const api = {
       }
     } catch (error) {
       console.error('Failed to delete notice:', error);
+      throw error;
+    }
+  },
+
+  // Task APIs
+  async getAllTasks(): Promise<Task[]> {
+    try {
+      const response = await fetch(`${API_URL}/api/tasks`, {
+        credentials: 'include',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch tasks');
+      }
+
+      return response.json();
+    } catch (error) {
+      console.error('Failed to fetch tasks:', error);
+      throw error;
+    }
+  },
+
+  async getTaskById(id: number): Promise<Task> {
+    try {
+      const response = await fetch(`${API_URL}/api/tasks/${id}`, {
+        credentials: 'include',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch task');
+      }
+
+      return response.json();
+    } catch (error) {
+      console.error('Failed to fetch task:', error);
+      throw error;
+    }
+  },
+
+  async createTask(task: TaskRequest): Promise<Task> {
+    try {
+      const response = await fetch(`${API_URL}/api/tasks`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify(task),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Create task failed:', response.status, errorText);
+        throw new Error(`Failed to create task: ${response.status} ${errorText}`);
+      }
+
+      return response.json();
+    } catch (error) {
+      console.error('Failed to create task:', error);
+      throw error;
+    }
+  },
+
+  async executeTask(id: number): Promise<Task> {
+    try {
+      const response = await fetch(`${API_URL}/api/tasks/${id}/execute`, {
+        method: 'POST',
+        credentials: 'include',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to execute task');
+      }
+
+      return response.json();
+    } catch (error) {
+      console.error('Failed to execute task:', error);
+      throw error;
+    }
+  },
+
+  async deleteTask(id: number): Promise<void> {
+    try {
+      const response = await fetch(`${API_URL}/api/tasks/${id}`, {
+        method: 'DELETE',
+        credentials: 'include',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete task');
+      }
+    } catch (error) {
+      console.error('Failed to delete task:', error);
       throw error;
     }
   },
