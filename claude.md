@@ -149,20 +149,13 @@ npm run start
 - [ ] `cd spring && ./gradlew build` 실행
 - [ ] 모든 테스트 통과 확인
 - [ ] Java 컨벤션 준수 확인
-- [ ] **커밋 진행 (커밋 메시지는 한글로 작성)**
 
 ### 프론트엔드 작업 후
 - [ ] `cd next && npm run lint` 실행
 - [ ] `cd next && npm run build` 실행
 - [ ] TypeScript 에러 없는지 확인
 - [ ] ESLint 에러 없는지 확인
-- [ ] **커밋 진행 (커밋 메시지는 한글로 작성)**
 - [ ] **개발 서버가 실행 중이라면 재시작 (Ctrl+C 후 `npm run dev`)**
-
-### ⚠️ 중요: 모든 작업 완료 후
-- [ ] **반드시 git commit 실행**
-- [ ] 커밋 메시지는 한글로 작성
-- [ ] 작업 내용을 명확하게 요약
 
 ### 전체 검증 스크립트
 ```bash
