@@ -31,7 +31,7 @@ export function AuthButton() {
 
   if (loading) {
     return (
-      <div className="h-10 w-32 bg-slate-200 dark:bg-slate-800 rounded-lg animate-pulse"></div>
+      <div className="h-10 w-32 bg-zinc-800 rounded-lg animate-pulse"></div>
     );
   }
 
@@ -39,7 +39,7 @@ export function AuthButton() {
     return (
       <button
         onClick={handleLogin}
-        className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition-colors"
+        className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white rounded-lg font-medium transition-all duration-200 shadow-lg shadow-blue-500/20"
       >
         <LogIn className="w-4 h-4" />
         Login with Discord
@@ -49,25 +49,25 @@ export function AuthButton() {
 
   return (
     <div className="flex items-center gap-3">
-      <div className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700">
+      <div className="flex items-center gap-2 px-4 py-2 bg-zinc-900 rounded-lg border border-zinc-800">
         {user.avatarUrl ? (
           <Image
             src={user.avatarUrl}
             alt={user.username}
             width={24}
             height={24}
-            className="w-6 h-6 rounded-full"
+            className="w-6 h-6 rounded-full ring-2 ring-blue-500/20"
           />
         ) : (
-          <UserIcon className="w-6 h-6 text-slate-500" />
+          <UserIcon className="w-6 h-6 text-zinc-400" />
         )}
-        <span className="text-sm font-medium text-slate-900 dark:text-white">
+        <span className="text-sm font-medium text-white">
           {user.username}
         </span>
       </div>
       <button
         onClick={handleLogout}
-        className="flex items-center gap-2 px-4 py-2 bg-slate-200 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-900 dark:text-white rounded-lg font-medium transition-colors"
+        className="flex items-center gap-2 px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white rounded-lg font-medium transition-all duration-200"
       >
         <LogOut className="w-4 h-4" />
         Logout

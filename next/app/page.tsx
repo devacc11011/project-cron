@@ -1,77 +1,83 @@
-import { Clock, Sparkles, Calendar } from "lucide-react";
+import { Clock, Sparkles, Calendar, Zap } from "lucide-react";
 import { HealthIndicator } from "@/components/health-indicator";
 import { Navbar } from "@/components/navbar";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-950 dark:to-blue-950">
+    <div className="min-h-screen bg-black">
       <HealthIndicator />
       <Navbar />
-      <div className="container mx-auto px-4 py-16">
+
+      {/* Gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10 pointer-events-none"></div>
+
+      <div className="relative container mx-auto px-4 py-16">
         {/* Hero Section */}
         <div className="flex flex-col items-center text-center space-y-8 max-w-4xl mx-auto pt-20">
-          <div className="inline-flex items-center gap-2 bg-blue-100 dark:bg-blue-900/30 px-4 py-2 rounded-full">
-            <Sparkles className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-            <span className="text-sm font-medium text-blue-700 dark:text-blue-300">
+          <div className="inline-flex items-center gap-2 bg-zinc-900 border border-zinc-800 px-4 py-2 rounded-full">
+            <Sparkles className="w-4 h-4 text-blue-400" />
+            <span className="text-sm font-medium bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
               AI Automation Scheduler
             </span>
           </div>
 
-          <h1 className="text-5xl md:text-6xl font-bold tracking-tight text-slate-900 dark:text-white">
+          <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-white">
             Set Your Schedule,
             <br />
-            <span className="text-blue-600 dark:text-blue-400">AI Does the Rest</span>
+            <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+              AI Does the Rest
+            </span>
           </h1>
 
-          <p className="text-xl text-slate-600 dark:text-slate-400 max-w-2xl">
+          <p className="text-xl text-zinc-400 max-w-2xl leading-relaxed">
             Delegate tasks to AI at your preferred time.
             A smart scheduler that runs automatically.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 pt-4">
-            <button className="px-8 py-4 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors shadow-lg shadow-blue-500/30">
+            <button className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white rounded-lg font-semibold transition-all duration-200 shadow-lg shadow-blue-500/20 hover:shadow-blue-500/40">
               Get Started
             </button>
-            <button className="px-8 py-4 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg font-semibold border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+            <button className="px-8 py-4 bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg font-semibold border border-zinc-800 hover:border-zinc-700 transition-all duration-200">
               Learn More
             </button>
           </div>
         </div>
 
         {/* Features */}
-        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto mt-32">
-          <div className="p-6 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition-shadow">
-            <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center mb-4">
-              <Clock className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+        <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto mt-32">
+          <div className="group p-8 bg-zinc-900 rounded-2xl border border-zinc-800 hover:border-blue-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/10">
+            <div className="w-14 h-14 bg-gradient-to-br from-blue-500/20 to-blue-600/20 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+              <Clock className="w-7 h-7 text-blue-400" />
             </div>
-            <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">
+            <h3 className="text-xl font-semibold text-white mb-3">
               Schedule Setup
             </h3>
-            <p className="text-slate-600 dark:text-slate-400">
+            <p className="text-zinc-400 leading-relaxed">
               Set up schedules to automatically execute tasks at your desired time
             </p>
           </div>
 
-          <div className="p-6 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition-shadow">
-            <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center mb-4">
-              <Sparkles className="w-6 h-6 text-purple-600 dark:text-purple-400" />
+          <div className="group p-8 bg-zinc-900 rounded-2xl border border-zinc-800 hover:border-purple-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/10">
+            <div className="w-14 h-14 bg-gradient-to-br from-purple-500/20 to-purple-600/20 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+              <Zap className="w-7 h-7 text-purple-400" />
             </div>
-            <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">
+            <h3 className="text-xl font-semibold text-white mb-3">
               AI Auto-Execution
             </h3>
-            <p className="text-slate-600 dark:text-slate-400">
+            <p className="text-zinc-400 leading-relaxed">
               AI automatically performs tasks at the scheduled time
             </p>
           </div>
 
-          <div className="p-6 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition-shadow">
-            <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center mb-4">
-              <Calendar className="w-6 h-6 text-green-600 dark:text-green-400" />
+          <div className="group p-8 bg-zinc-900 rounded-2xl border border-zinc-800 hover:border-pink-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-pink-500/10">
+            <div className="w-14 h-14 bg-gradient-to-br from-pink-500/20 to-pink-600/20 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+              <Calendar className="w-7 h-7 text-pink-400" />
             </div>
-            <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">
+            <h3 className="text-xl font-semibold text-white mb-3">
               Recurring Task Management
             </h3>
-            <p className="text-slate-600 dark:text-slate-400">
+            <p className="text-zinc-400 leading-relaxed">
               Easily manage everything from one-time to recurring tasks
             </p>
           </div>

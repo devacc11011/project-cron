@@ -90,15 +90,15 @@ export default function NoticeList() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-slate-900 dark:text-white">
+    <div className="max-w-5xl mx-auto p-6">
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-4xl font-bold text-white">
           Notices
         </h1>
         {isAdmin && !isCreating && !editingNotice && (
           <button
             onClick={() => setIsCreating(true)}
-            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded shadow-lg"
+            className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white px-6 py-3 rounded-lg font-medium shadow-lg shadow-blue-500/20 hover:shadow-blue-500/40 transition-all duration-200"
           >
             Create Notice
           </button>
@@ -108,13 +108,13 @@ export default function NoticeList() {
       {(isCreating || editingNotice) && (
         <form
           onSubmit={editingNotice ? handleUpdate : handleCreate}
-          className="bg-white dark:bg-slate-900 shadow-md rounded-lg px-8 pt-6 pb-8 mb-6 border border-slate-200 dark:border-slate-800"
+          className="bg-zinc-900 shadow-xl rounded-2xl px-8 pt-8 pb-8 mb-8 border border-zinc-800"
         >
-          <h2 className="text-xl font-bold mb-4 text-slate-900 dark:text-white">
+          <h2 className="text-2xl font-bold mb-6 text-white">
             {editingNotice ? 'Edit Notice' : 'Create Notice'}
           </h2>
-          <div className="mb-4">
-            <label className="block text-slate-700 dark:text-slate-300 text-sm font-bold mb-2">
+          <div className="mb-6">
+            <label className="block text-zinc-300 text-sm font-semibold mb-2">
               Title
             </label>
             <input
@@ -123,12 +123,12 @@ export default function NoticeList() {
               onChange={(e) =>
                 setFormData({ ...formData, title: e.target.value })
               }
-              className="shadow appearance-none border border-slate-300 dark:border-slate-700 rounded w-full py-2 px-3 text-slate-900 dark:text-white bg-white dark:bg-slate-800 leading-tight focus:outline-none focus:shadow-outline focus:border-blue-500"
+              className="w-full py-3 px-4 text-white bg-black border border-zinc-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all"
               required
             />
           </div>
-          <div className="mb-4">
-            <label className="block text-slate-700 dark:text-slate-300 text-sm font-bold mb-2">
+          <div className="mb-6">
+            <label className="block text-zinc-300 text-sm font-semibold mb-2">
               Content
             </label>
             <textarea
@@ -136,22 +136,22 @@ export default function NoticeList() {
               onChange={(e) =>
                 setFormData({ ...formData, content: e.target.value })
               }
-              className="shadow appearance-none border border-slate-300 dark:border-slate-700 rounded w-full py-2 px-3 text-slate-900 dark:text-white bg-white dark:bg-slate-800 leading-tight focus:outline-none focus:shadow-outline focus:border-blue-500"
-              rows={5}
+              className="w-full py-3 px-4 text-white bg-black border border-zinc-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all resize-none"
+              rows={8}
               required
             />
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-3">
             <button
               type="submit"
-              className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded shadow-lg transition-colors"
+              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white px-6 py-3 rounded-lg font-medium shadow-lg shadow-blue-500/20 hover:shadow-blue-500/40 transition-all duration-200"
             >
               {editingNotice ? 'Update' : 'Create'}
             </button>
             <button
               type="button"
               onClick={cancelEdit}
-              className="bg-slate-500 hover:bg-slate-600 text-white px-4 py-2 rounded shadow-lg transition-colors"
+              className="bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white px-6 py-3 rounded-lg font-medium transition-all duration-200"
             >
               Cancel
             </button>
@@ -159,24 +159,27 @@ export default function NoticeList() {
         </form>
       )}
 
-      <div className="space-y-4">
+      <div className="space-y-6">
         {notices.length === 0 ? (
-          <div className="text-center py-8 text-slate-500 dark:text-slate-400">
+          <div className="text-center py-16 text-zinc-500">
             No notices yet
           </div>
         ) : (
           notices.map((notice) => (
             <div
               key={notice.id}
-              className="bg-white dark:bg-slate-900 shadow-md rounded-lg px-8 pt-6 pb-8 border border-slate-200 dark:border-slate-800"
+              className="group bg-zinc-900 shadow-xl rounded-2xl px-8 pt-6 pb-8 border border-zinc-800 hover:border-zinc-700 transition-all duration-300"
             >
               <div className="flex justify-between items-start mb-4">
                 <div className="flex-1">
-                  <h2 className="text-2xl font-bold mb-2 text-slate-900 dark:text-white">
+                  <h2 className="text-2xl font-bold mb-3 text-white group-hover:text-blue-400 transition-colors">
                     {notice.title}
                   </h2>
-                  <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400 mb-2">
-                    <span>By {notice.author.username}</span>
+                  <div className="flex items-center gap-3 text-sm text-zinc-500 mb-4">
+                    <span className="flex items-center gap-1">
+                      <span className="text-zinc-400">By</span>
+                      <span className="text-blue-400 font-medium">{notice.author.username}</span>
+                    </span>
                     <span>•</span>
                     <span>
                       {new Date(notice.createdAt).toLocaleDateString()}
@@ -187,20 +190,20 @@ export default function NoticeList() {
                   <div className="flex gap-2">
                     <button
                       onClick={() => startEdit(notice)}
-                      className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded text-sm shadow transition-colors"
+                      className="bg-yellow-600 hover:bg-yellow-500 text-white px-4 py-2 rounded-lg text-sm font-medium shadow transition-all duration-200"
                     >
                       Edit
                     </button>
                     <button
                       onClick={() => handleDelete(notice.id)}
-                      className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm shadow transition-colors"
+                      className="bg-red-600 hover:bg-red-500 text-white px-4 py-2 rounded-lg text-sm font-medium shadow transition-all duration-200"
                     >
                       Delete
                     </button>
                   </div>
                 )}
               </div>
-              <p className="text-slate-700 dark:text-slate-300 whitespace-pre-wrap">
+              <p className="text-zinc-300 whitespace-pre-wrap leading-relaxed">
                 {notice.content}
               </p>
             </div>
