@@ -128,6 +128,7 @@ class TaskServiceTest {
 			.prompt(request.getPrompt())
 			.status(Task.TaskStatus.PENDING)
 			.aiProvider(request.getAiProvider())
+			.enableWebSearch(false)
 			.user(testUser)
 			.build();
 
@@ -141,6 +142,38 @@ class TaskServiceTest {
 		assertThat(createdTask.getTitle()).isEqualTo("New Task");
 		assertThat(createdTask.getAiProvider()).isEqualTo("claude");
 		assertThat(createdTask.getStatus()).isEqualTo(Task.TaskStatus.PENDING);
+		assertThat(createdTask.getEnableWebSearch()).isFalse();
+		verify(taskRepository).save(any(Task.class));
+	}
+
+	@Test
+	@DisplayName("웹 검색 활성화된 작업 생성 성공")
+	void createTask_WithWebSearch_Success() {
+		// given
+		TaskRequest request = TaskRequest.builder()
+			.title("Search Task")
+			.prompt("Find latest news about AI")
+			.aiProvider("gemini")
+			.enableWebSearch(true)
+			.build();
+
+		Task newTask = Task.builder()
+			.title(request.getTitle())
+			.prompt(request.getPrompt())
+			.status(Task.TaskStatus.PENDING)
+			.aiProvider(request.getAiProvider())
+			.enableWebSearch(true)
+			.user(testUser)
+			.build();
+
+		given(taskRepository.save(any(Task.class))).willReturn(newTask);
+
+		// when
+		Task createdTask = taskService.createTask(request, testUser);
+
+		// then
+		assertThat(createdTask).isNotNull();
+		assertThat(createdTask.getEnableWebSearch()).isTrue();
 		verify(taskRepository).save(any(Task.class));
 	}
 

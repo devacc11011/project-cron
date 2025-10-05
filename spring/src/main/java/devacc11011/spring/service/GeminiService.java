@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -20,7 +22,7 @@ public class GeminiService implements AIService {
 	@Value("${gemini.api.key:}")
 	private String apiKey;
 
-	private static final String GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
+	private static final String GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent";
 
 	@Override
 	public boolean isEnabled() {
@@ -29,6 +31,15 @@ public class GeminiService implements AIService {
 
 	@Override
 	public String executeTask(String prompt) {
+		return executeGeminiRequest(prompt, false);
+	}
+
+	@Override
+	public String executeTaskWithWebSearch(String prompt) {
+		return executeGeminiRequest(prompt, true);
+	}
+
+	private String executeGeminiRequest(String prompt, boolean enableGrounding) {
 		if (!isEnabled()) {
 			return "Gemini API is disabled (API key not configured)";
 		}
@@ -36,15 +47,41 @@ public class GeminiService implements AIService {
 		try {
 			WebClient webClient = webClientBuilder.build();
 
-			Map<String, Object> requestBody = Map.of(
-				"contents", List.of(
-					Map.of(
-						"parts", List.of(
-							Map.of("text", prompt)
+			// Web search 활성화 시 현재 날짜 정보 추가
+			String finalPrompt;
+			if (enableGrounding) {
+				String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+				finalPrompt = String.format("Today is %s. %s", today, prompt);
+			} else {
+				finalPrompt = prompt;
+			}
+
+			Map<String, Object> requestBody;
+			if (enableGrounding) {
+				// Google Search Grounding 사용
+				requestBody = Map.of(
+					"contents", List.of(
+						Map.of(
+							"parts", List.of(
+								Map.of("text", finalPrompt)
+							)
+						)
+					),
+					"tools", List.of(
+						Map.of("google_search", Map.of())
+					)
+				);
+			} else {
+				requestBody = Map.of(
+					"contents", List.of(
+						Map.of(
+							"parts", List.of(
+								Map.of("text", finalPrompt)
+							)
 						)
 					)
-				)
-			);
+				);
+			}
 
 			String response = webClient.post()
 				.uri(GEMINI_API_URL + "?key=" + apiKey)

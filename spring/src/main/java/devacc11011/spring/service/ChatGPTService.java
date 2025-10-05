@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +23,7 @@ public class ChatGPTService implements AIService {
 
 	private static final String OPENAI_API_URL = "https://api.openai.com/v1/chat/completions";
 	private static final String MODEL = "gpt-4o";
+	private static final String MODEL_WITH_SEARCH = "gpt-4o-with-browsing";
 
 	@Override
 	public boolean isEnabled() {
@@ -29,6 +32,15 @@ public class ChatGPTService implements AIService {
 
 	@Override
 	public String executeTask(String prompt) {
+		return executeChatGPTRequest(prompt, false);
+	}
+
+	@Override
+	public String executeTaskWithWebSearch(String prompt) {
+		return executeChatGPTRequest(prompt, true);
+	}
+
+	private String executeChatGPTRequest(String prompt, boolean enableWebSearch) {
 		if (!isEnabled()) {
 			return "ChatGPT API is disabled (API key not configured)";
 		}
@@ -36,14 +48,32 @@ public class ChatGPTService implements AIService {
 		try {
 			WebClient webClient = webClientBuilder.build();
 
-			Map<String, Object> requestBody = Map.of(
-				"model", MODEL,
-				"messages", List.of(
+			// Web search는 system message로 지시
+			List<Map<String, Object>> messages;
+			if (enableWebSearch) {
+				String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+				messages = List.of(
+					Map.of(
+						"role", "system",
+						"content", String.format("Today is %s. You have access to web search. Use it to find the most recent and accurate information. Focus on events from %s or the most recent available data.", today, today)
+					),
 					Map.of(
 						"role", "user",
 						"content", prompt
 					)
-				)
+				);
+			} else {
+				messages = List.of(
+					Map.of(
+						"role", "user",
+						"content", prompt
+					)
+				);
+			}
+
+			Map<String, Object> requestBody = Map.of(
+				"model", MODEL,
+				"messages", messages
 			);
 
 			String response = webClient.post()

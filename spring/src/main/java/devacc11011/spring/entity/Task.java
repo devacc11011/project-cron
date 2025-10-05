@@ -37,6 +37,10 @@ public class Task {
 	@Builder.Default
 	private String aiProvider = "gemini";
 
+	@Column(name = "enable_web_search")
+	@Builder.Default
+	private Boolean enableWebSearch = false;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id", nullable = false)
 	private User user;

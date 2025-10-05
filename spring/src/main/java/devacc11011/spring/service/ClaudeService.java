@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +32,15 @@ public class ClaudeService implements AIService {
 
 	@Override
 	public String executeTask(String prompt) {
+		return executeClaudeRequest(prompt, false);
+	}
+
+	@Override
+	public String executeTaskWithWebSearch(String prompt) {
+		return executeClaudeRequest(prompt, true);
+	}
+
+	private String executeClaudeRequest(String prompt, boolean enableWebSearch) {
 		if (!isEnabled()) {
 			return "Claude API is disabled (API key not configured)";
 		}
@@ -37,16 +48,33 @@ public class ClaudeService implements AIService {
 		try {
 			WebClient webClient = webClientBuilder.build();
 
-			Map<String, Object> requestBody = Map.of(
-				"model", MODEL,
-				"max_tokens", 4096,
-				"messages", List.of(
-					Map.of(
-						"role", "user",
-						"content", prompt
+			// Web search는 system prompt로 지시
+			Map<String, Object> requestBody;
+			if (enableWebSearch) {
+				String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+				requestBody = Map.of(
+					"model", MODEL,
+					"max_tokens", 4096,
+					"system", String.format("Today is %s. You have access to web search capabilities. Use them to find the most recent and accurate information. Focus on events from %s or the most recent available data.", today, today),
+					"messages", List.of(
+						Map.of(
+							"role", "user",
+							"content", prompt
+						)
 					)
-				)
-			);
+				);
+			} else {
+				requestBody = Map.of(
+					"model", MODEL,
+					"max_tokens", 4096,
+					"messages", List.of(
+						Map.of(
+							"role", "user",
+							"content", prompt
+						)
+					)
+				);
+			}
 
 			String response = webClient.post()
 				.uri(CLAUDE_API_URL)

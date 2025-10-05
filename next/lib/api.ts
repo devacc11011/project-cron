@@ -36,6 +36,7 @@ export interface Task {
   result: string | null;
   status: string;
   aiProvider: string;
+  enableWebSearch: boolean;
   user: {
     discordId: string;
     username: string;
@@ -49,6 +50,7 @@ export interface TaskRequest {
   title: string;
   prompt: string;
   aiProvider?: string;
+  enableWebSearch?: boolean;
 }
 
 export const api = {

@@ -10,6 +10,7 @@ export default function TaskList() {
   const [title, setTitle] = useState('');
   const [prompt, setPrompt] = useState('');
   const [aiProvider, setAiProvider] = useState('gemini');
+  const [enableWebSearch, setEnableWebSearch] = useState(false);
   const [creating, setCreating] = useState(false);
 
   const loadTasks = async () => {
@@ -33,10 +34,11 @@ export default function TaskList() {
 
     setCreating(true);
     try {
-      await api.createTask({ title, prompt, aiProvider });
+      await api.createTask({ title, prompt, aiProvider, enableWebSearch });
       setTitle('');
       setPrompt('');
       setAiProvider('gemini');
+      setEnableWebSearch(false);
       await loadTasks();
     } catch (error) {
       console.error('Failed to create task:', error);
@@ -159,6 +161,18 @@ export default function TaskList() {
               required
             />
           </div>
+          <div className="flex items-center gap-3">
+            <input
+              id="enableWebSearch"
+              type="checkbox"
+              checked={enableWebSearch}
+              onChange={(e) => setEnableWebSearch(e.target.checked)}
+              className="w-4 h-4 bg-black border border-zinc-700 rounded focus:ring-2 focus:ring-blue-500 text-blue-600"
+            />
+            <label htmlFor="enableWebSearch" className="text-sm font-medium text-gray-300 cursor-pointer">
+              Enable Web Search (for latest information)
+            </label>
+          </div>
           <button
             type="submit"
             disabled={creating}
@@ -195,6 +209,11 @@ export default function TaskList() {
                     <span className="text-xs px-2 py-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full text-white font-medium">
                       {task.aiProvider.toUpperCase()}
                     </span>
+                    {task.enableWebSearch && (
+                      <span className="text-xs px-2 py-1 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full text-white font-medium">
+                        WEB SEARCH
+                      </span>
+                    )}
                   </div>
                   <p className="text-sm text-gray-400">
                     Created by {task.user.username} • {new Date(task.createdAt).toLocaleString()}

@@ -43,11 +43,17 @@ public class TaskService {
 			provider = "gemini";
 		}
 
+		Boolean enableWebSearch = request.getEnableWebSearch();
+		if (enableWebSearch == null) {
+			enableWebSearch = false;
+		}
+
 		Task task = Task.builder()
 			.title(request.getTitle())
 			.prompt(request.getPrompt())
 			.status(Task.TaskStatus.PENDING)
 			.aiProvider(provider)
+			.enableWebSearch(enableWebSearch)
 			.user(user)
 			.build();
 
@@ -64,7 +70,15 @@ public class TaskService {
 			taskRepository.save(task);
 
 			AIService aiService = aiServiceFactory.getAIService(task.getAiProvider());
-			String result = aiService.executeTask(task.getPrompt());
+
+			// 웹 검색 옵션에 따라 다른 메서드 호출
+			String result;
+			if (Boolean.TRUE.equals(task.getEnableWebSearch())) {
+				result = aiService.executeTaskWithWebSearch(task.getPrompt());
+				log.info("Task {} executing with web search enabled", taskId);
+			} else {
+				result = aiService.executeTask(task.getPrompt());
+			}
 
 			task.setResult(result);
 			task.setStatus(Task.TaskStatus.COMPLETED);
