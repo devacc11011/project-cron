@@ -12,6 +12,9 @@ spring:
     hibernate:
       ddl-auto: create-drop
     show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
 
   security:
     oauth2:
@@ -35,3 +38,15 @@ spring:
 app:
   frontend:
     url: http://localhost:3000
+
+gemini:
+  api:
+    key: test-gemini-api-key
+
+claude:
+  api:
+    key: test-claude-api-key
+
+openai:
+  api:
+    key: test-openai-api-key
