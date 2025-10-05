@@ -27,7 +27,7 @@ export function HealthIndicator() {
 
   if (isLoading) {
     return (
-      <div className="fixed top-4 right-4 flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-full border border-slate-200 dark:border-slate-700">
+      <div className="fixed bottom-4 right-4 flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-full border border-slate-200 dark:border-slate-700 shadow-lg">
         <Activity className="w-4 h-4 text-slate-400 animate-pulse" />
         <span className="text-sm text-slate-600 dark:text-slate-400">Checking...</span>
       </div>
@@ -36,7 +36,7 @@ export function HealthIndicator() {
 
   return (
     <div
-      className={`fixed top-4 right-4 flex items-center gap-2 px-4 py-2 rounded-full border ${
+      className={`fixed bottom-4 right-4 flex items-center gap-2 px-4 py-2 rounded-full border shadow-lg ${
         isHealthy
           ? "bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800"
           : "bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800"

@@ -1,14 +1,12 @@
 import { Clock, Sparkles, Calendar } from "lucide-react";
 import { HealthIndicator } from "@/components/health-indicator";
-import { AuthButton } from "@/components/auth-button";
+import { Navbar } from "@/components/navbar";
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-950 dark:to-blue-950">
       <HealthIndicator />
-      <div className="absolute top-4 right-4">
-        <AuthButton />
-      </div>
+      <Navbar />
       <div className="container mx-auto px-4 py-16">
         {/* Hero Section */}
         <div className="flex flex-col items-center text-center space-y-8 max-w-4xl mx-auto pt-20">
