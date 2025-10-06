@@ -23,7 +23,8 @@ public class TaskService {
 
 	private final TaskRepository taskRepository;
 	private final AIServiceFactory aiServiceFactory;
-	private final UserUsageService userUsageService;
+	private final UserTokenUsageService userTokenUsageService;
+	private final NotificationServiceFactory notificationServiceFactory;
 
 	public List<Task> findAllTasks() {
 		return taskRepository.findAllByOrderByCreatedAtDesc();
@@ -50,12 +51,18 @@ public class TaskService {
 			enableWebSearch = false;
 		}
 
+		String notificationType = request.getNotificationType();
+		if (notificationType == null || notificationType.isEmpty()) {
+			notificationType = "discord";
+		}
+
 		Task task = Task.builder()
 			.title(request.getTitle())
 			.prompt(request.getPrompt())
 			.status(Task.TaskStatus.PENDING)
 			.aiProvider(provider)
 			.enableWebSearch(enableWebSearch)
+			.notificationType(notificationType)
 			.user(user)
 			.build();
 
@@ -69,7 +76,7 @@ public class TaskService {
 
 		// 사용량 체크 (예상 최대 토큰: 5000)
 		long estimatedTokens = 5000L;
-		if (!userUsageService.hasTokensAvailable(task.getUser(), estimatedTokens)) {
+		if (!userTokenUsageService.hasTokensAvailable(task.getUser(), estimatedTokens)) {
 			log.warn("User {} exceeded token limit", task.getUser().getUsername());
 			task.setStatus(Task.TaskStatus.FAILED);
 			task.setResult("Error: Monthly token limit exceeded. Please upgrade your plan or wait for next month.");
@@ -99,15 +106,34 @@ public class TaskService {
 			taskRepository.save(task);
 
 			// 실제 사용된 토큰 업데이트
-			userUsageService.addTokensUsed(task.getUser(), response.getTokensUsed());
+			userTokenUsageService.addTokensUsed(task.getUser(), response.getTokensUsed());
 
 			log.info("Task {} completed successfully with {} ({} tokens used)",
 				taskId, aiService.getProviderName(), response.getTokensUsed());
+
+			// 알림 전송
+			sendNotification(task);
 		} catch (Exception e) {
 			log.error("Task {} failed", taskId, e);
 			task.setStatus(Task.TaskStatus.FAILED);
 			task.setResult("Error: " + e.getMessage());
 			taskRepository.save(task);
+
+			// 실패 시에도 알림 전송
+			sendNotification(task);
+		}
+	}
+
+	private void sendNotification(Task task) {
+		try {
+			NotificationService notificationService = notificationServiceFactory.getNotificationService(task.getNotificationType());
+			if (notificationService.isEnabled()) {
+				notificationService.sendTaskCompletionNotification(task);
+			} else {
+				log.warn("Notification service {} is not enabled", task.getNotificationType());
+			}
+		} catch (Exception e) {
+			log.error("Failed to send notification for task: {}", task.getId(), e);
 		}
 	}
 

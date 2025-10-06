@@ -1,6 +1,6 @@
 package devacc11011.spring.job;
 
-import devacc11011.spring.service.UserUsageService;
+import devacc11011.spring.service.UserTokenUsageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.Job;
@@ -16,7 +16,7 @@ import java.time.format.DateTimeFormatter;
 @Slf4j
 public class MonthlyUsageResetJob implements Job {
 
-	private final UserUsageService userUsageService;
+	private final UserTokenUsageService userTokenUsageService;
 
 	@Override
 	public void execute(JobExecutionContext context) throws JobExecutionException {
@@ -25,7 +25,7 @@ public class MonthlyUsageResetJob implements Job {
 		log.info("Starting monthly usage reset for yearMonth: {}", lastMonth);
 
 		try {
-			userUsageService.resetMonthlyUsage(lastMonth);
+			userTokenUsageService.resetMonthlyUsage(lastMonth);
 			log.info("Successfully reset monthly usage for yearMonth: {}", lastMonth);
 		} catch (Exception e) {
 			log.error("Failed to reset monthly usage for yearMonth: {}", lastMonth, e);

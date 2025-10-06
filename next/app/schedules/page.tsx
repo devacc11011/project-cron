@@ -22,6 +22,7 @@ export default function SchedulesPage() {
   const [prompt, setPrompt] = useState('');
   const [aiProvider, setAiProvider] = useState('gemini');
   const [enableWebSearch, setEnableWebSearch] = useState(false);
+  const [notificationType, setNotificationType] = useState('discord');
   const [cronPreset, setCronPreset] = useState('0 0 9 * * ?');
   const [cronExpression, setCronExpression] = useState('0 0 9 * * ?');
   const [startDate, setStartDate] = useState('');
@@ -58,6 +59,7 @@ export default function SchedulesPage() {
         prompt,
         aiProvider,
         enableWebSearch,
+        notificationType,
         cronExpression,
         startDate: startDate || undefined,
         endDate: endDate || undefined,
@@ -67,6 +69,7 @@ export default function SchedulesPage() {
       setPrompt('');
       setAiProvider('gemini');
       setEnableWebSearch(false);
+      setNotificationType('discord');
       setCronExpression('0 0 9 * * ?');
       setCronPreset('0 0 9 * * ?');
       setStartDate('');
@@ -174,6 +177,18 @@ export default function SchedulesPage() {
                   <span className="text-sm font-medium text-gray-300">Enable Web Search</span>
                 </label>
               </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Notification Type</label>
+              <select
+                value={notificationType}
+                onChange={(e) => setNotificationType(e.target.value)}
+                className="w-full px-4 py-2 bg-black border border-zinc-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+              >
+                <option value="discord">Discord</option>
+                <option value="email">Email (Coming Soon)</option>
+              </select>
             </div>
 
             <div>

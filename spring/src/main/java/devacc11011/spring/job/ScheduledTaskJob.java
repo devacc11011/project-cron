@@ -29,7 +29,7 @@ public class ScheduledTaskJob implements Job {
 
 		log.info("Executing scheduled task for schedule ID: {}", scheduleId);
 
-		Schedule schedule = scheduleRepository.findById(scheduleId).orElse(null);
+		Schedule schedule = scheduleRepository.findByIdWithUser(scheduleId).orElse(null);
 		if (schedule == null) {
 			log.error("Schedule not found: {}", scheduleId);
 			return;
@@ -60,6 +60,7 @@ public class ScheduledTaskJob implements Job {
 				.prompt(originalTask.getPrompt())
 				.aiProvider(originalTask.getAiProvider())
 				.enableWebSearch(originalTask.getEnableWebSearch())
+				.notificationType(originalTask.getNotificationType())
 				.build();
 
 			newTask = taskService.createTask(taskRequest, originalTask.getUser());
@@ -71,6 +72,7 @@ public class ScheduledTaskJob implements Job {
 				.prompt(schedule.getPrompt())
 				.aiProvider(schedule.getAiProvider())
 				.enableWebSearch(schedule.getEnableWebSearch())
+				.notificationType(schedule.getNotificationType())
 				.build();
 
 			newTask = taskService.createTask(taskRequest, schedule.getUser());

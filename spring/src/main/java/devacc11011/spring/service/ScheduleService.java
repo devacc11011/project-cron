@@ -84,13 +84,14 @@ public class ScheduleService {
 	// 일반 사용자용: 독립 스케줄
 	@Transactional
 	public Schedule createUserSchedule(User user, String title, String prompt, String aiProvider, Boolean enableWebSearch,
-	                                    String cronExpression, LocalDateTime startDate, LocalDateTime endDate) {
+	                                    String notificationType, String cronExpression, LocalDateTime startDate, LocalDateTime endDate) {
 		Schedule schedule = Schedule.builder()
 			.user(user)
 			.title(title)
 			.prompt(prompt)
 			.aiProvider(aiProvider != null ? aiProvider : "gemini")
 			.enableWebSearch(enableWebSearch != null ? enableWebSearch : false)
+			.notificationType(notificationType != null && !notificationType.isEmpty() ? notificationType : "discord")
 			.cronExpression(cronExpression)
 			.startDate(startDate)
 			.endDate(endDate)

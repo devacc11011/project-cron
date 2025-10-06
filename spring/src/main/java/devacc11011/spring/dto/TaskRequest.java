@@ -15,4 +15,5 @@ public class TaskRequest {
 	private String prompt;
 	private String aiProvider;
 	private Boolean enableWebSearch;
+	private String notificationType;
 }

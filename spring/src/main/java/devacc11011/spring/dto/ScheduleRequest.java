@@ -19,6 +19,7 @@ public class ScheduleRequest {
 	private String prompt;
 	private String aiProvider;
 	private Boolean enableWebSearch;
+	private String notificationType;
 
 	// 공통
 	private String cronExpression;

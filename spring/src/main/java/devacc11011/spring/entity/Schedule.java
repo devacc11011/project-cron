@@ -42,6 +42,10 @@ public class Schedule {
 	@Column(name = "enable_web_search")
 	private Boolean enableWebSearch;
 
+	@Column(name = "notification_type", length = 50)
+	@Builder.Default
+	private String notificationType = "discord";
+
 	@Column(name = "cron_expression", nullable = false, length = 100)
 	private String cronExpression;
 

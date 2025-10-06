@@ -56,6 +56,10 @@ openai:
   api:
     key: ${OPENAI_API_KEY:}
 
+discord:
+  webhook:
+    url: ${DISCORD_WEBHOOK_URL:}
+
 app:
   frontend:
     url: ${FRONTEND_URL:http://localhost:3000}

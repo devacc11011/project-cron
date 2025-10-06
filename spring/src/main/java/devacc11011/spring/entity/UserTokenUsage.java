@@ -6,13 +6,13 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "user_usage")
+@Table(name = "user_token_usage")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserUsage {
+public class UserTokenUsage {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +22,7 @@ public class UserUsage {
 	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
 
-	@Column(name = "year_month", nullable = false, length = 7)
+	@Column(name = "usage_month", nullable = false, length = 7)
 	private String yearMonth; // "2025-10" 형식
 
 	@Column(name = "total_tokens_used", nullable = false)

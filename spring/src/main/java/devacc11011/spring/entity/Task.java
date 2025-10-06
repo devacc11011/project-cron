@@ -44,6 +44,10 @@ public class Task {
 	@Column(name = "tokens_used")
 	private Long tokensUsed;
 
+	@Column(name = "notification_type", length = 50)
+	@Builder.Default
+	private String notificationType = "discord";
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id", nullable = false)
 	private User user;

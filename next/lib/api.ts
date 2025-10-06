@@ -52,6 +52,7 @@ export interface TaskRequest {
   prompt: string;
   aiProvider?: string;
   enableWebSearch?: boolean;
+  notificationType?: string;
 }
 
 export interface Schedule {
@@ -76,6 +77,7 @@ export interface ScheduleRequest {
   prompt?: string;
   aiProvider?: string;
   enableWebSearch?: boolean;
+  notificationType?: string;
   cronExpression: string;
   startDate?: string;
   endDate?: string;
@@ -462,7 +464,7 @@ export const api = {
   },
 
   // User Usage APIs
-  async getCurrentUsage(): Promise<UserUsage> {
+  async getCurrentUsage(): Promise<UserTokenUsage> {
     try {
       const response = await fetch(`${API_URL}/api/usage/current`, {
         credentials: 'include',
@@ -480,7 +482,7 @@ export const api = {
   },
 };
 
-export interface UserUsage {
+export interface UserTokenUsage {
   yearMonth: string;
   totalTokensUsed: number;
   tokenLimit: number;

@@ -1,11 +1,11 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { api, UserUsage } from '@/lib/api';
+import { api, UserTokenUsage } from '@/lib/api';
 import { Activity } from 'lucide-react';
 
 export function UsageBadge() {
-  const [usage, setUsage] = useState<UserUsage | null>(null);
+  const [usage, setUsage] = useState<UserTokenUsage | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

@@ -1,6 +1,6 @@
 package devacc11011.spring.dto;
 
-import devacc11011.spring.entity.UserUsage;
+import devacc11011.spring.entity.UserTokenUsage;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserUsageResponse {
+public class UserTokenUsageResponse {
 
 	private String yearMonth;
 	private Long totalTokensUsed;
@@ -18,11 +18,11 @@ public class UserUsageResponse {
 	private Long remainingTokens;
 	private Double usagePercentage;
 
-	public static UserUsageResponse from(UserUsage usage) {
+	public static UserTokenUsageResponse from(UserTokenUsage usage) {
 		long remaining = usage.getRemainingTokens();
 		double percentage = (usage.getTotalTokensUsed().doubleValue() / usage.getTokenLimit().doubleValue()) * 100;
 
-		return UserUsageResponse.builder()
+		return UserTokenUsageResponse.builder()
 			.yearMonth(usage.getYearMonth())
 			.totalTokensUsed(usage.getTotalTokensUsed())
 			.tokenLimit(usage.getTokenLimit())

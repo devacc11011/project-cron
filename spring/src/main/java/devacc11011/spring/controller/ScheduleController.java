@@ -127,6 +127,7 @@ public class ScheduleController {
 			request.getPrompt(),
 			request.getAiProvider(),
 			request.getEnableWebSearch(),
+			request.getNotificationType(),
 			request.getCronExpression(),
 			startDate,
 			endDate

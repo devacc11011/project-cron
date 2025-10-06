@@ -12,6 +12,7 @@ export default function TaskList() {
   const [prompt, setPrompt] = useState('');
   const [aiProvider, setAiProvider] = useState('gemini');
   const [enableWebSearch, setEnableWebSearch] = useState(false);
+  const [notificationType, setNotificationType] = useState('discord');
   const [creating, setCreating] = useState(false);
   const [scheduleModal, setScheduleModal] = useState<{ taskId: number; taskTitle: string } | null>(null);
 
@@ -36,11 +37,12 @@ export default function TaskList() {
 
     setCreating(true);
     try {
-      await api.createTask({ title, prompt, aiProvider, enableWebSearch });
+      await api.createTask({ title, prompt, aiProvider, enableWebSearch, notificationType });
       setTitle('');
       setPrompt('');
       setAiProvider('gemini');
       setEnableWebSearch(false);
+      setNotificationType('discord');
       await loadTasks();
     } catch (error) {
       console.error('Failed to create task:', error);
@@ -174,6 +176,20 @@ export default function TaskList() {
             <label htmlFor="enableWebSearch" className="text-sm font-medium text-gray-300 cursor-pointer">
               Enable Web Search (for latest information)
             </label>
+          </div>
+          <div>
+            <label htmlFor="notificationType" className="block text-sm font-medium text-gray-300 mb-2">
+              Notification Type
+            </label>
+            <select
+              id="notificationType"
+              value={notificationType}
+              onChange={(e) => setNotificationType(e.target.value)}
+              className="w-full px-4 py-2 bg-black border border-zinc-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+            >
+              <option value="discord">Discord</option>
+              <option value="email">Email (Coming Soon)</option>
+            </select>
           </div>
           <button
             type="submit"
