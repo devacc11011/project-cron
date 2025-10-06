@@ -58,9 +58,14 @@ echo "[5/5] 컨테이너 실행 중..."
 
 # 백엔드 컨테이너 실행
 echo "  - 백엔드 컨테이너 실행..."
+if [ ! -f ~/.env.spring ]; then
+    echo "오류: ~/.env.spring 파일을 찾을 수 없습니다."
+    exit 1
+fi
 docker run -d \
     --name "${PROJECT_NAME}-backend" \
     -p "${BACKEND_PORT}:8080" \
+    --env-file ~/.env.spring \
     --restart unless-stopped \
     "${PROJECT_NAME}-backend:${BRANCH}"
 
