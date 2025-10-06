@@ -71,9 +71,14 @@ docker run -d \
 
 # 프론트엔드 컨테이너 실행
 echo "  - 프론트엔드 컨테이너 실행..."
+if [ ! -f ~/.env.next ]; then
+    echo "오류: ~/.env.next 파일을 찾을 수 없습니다."
+    exit 1
+fi
 docker run -d \
     --name "${PROJECT_NAME}-frontend" \
     -p "${FRONTEND_PORT}:3000" \
+    --env-file ~/.env.next \
     --restart unless-stopped \
     -e "NEXT_PUBLIC_API_URL=http://localhost:${BACKEND_PORT}" \
     "${PROJECT_NAME}-frontend:${BRANCH}"
