@@ -27,6 +27,18 @@ export function Navbar() {
                 Notices
               </Link>
               <Link
+                href="/schedules"
+                className="px-4 py-2 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-lg transition-all duration-200"
+              >
+                Schedules
+              </Link>
+              <Link
+                href="/schedules/history"
+                className="px-4 py-2 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-lg transition-all duration-200"
+              >
+                History
+              </Link>
+              <Link
                 href="/tasks"
                 className="px-4 py-2 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-lg transition-all duration-200"
               >

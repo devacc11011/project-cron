@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import { api, Task } from '@/lib/api';
-import { Play, Trash2, Clock, CheckCircle, XCircle, Loader2 } from 'lucide-react';
+import { Play, Trash2, Clock, CheckCircle, XCircle, Loader2, CalendarClock } from 'lucide-react';
+import ScheduleModal from './schedule-modal';
 
 export default function TaskList() {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -12,6 +13,7 @@ export default function TaskList() {
   const [aiProvider, setAiProvider] = useState('gemini');
   const [enableWebSearch, setEnableWebSearch] = useState(false);
   const [creating, setCreating] = useState(false);
+  const [scheduleModal, setScheduleModal] = useState<{ taskId: number; taskTitle: string } | null>(null);
 
   const loadTasks = async () => {
     try {
@@ -220,6 +222,13 @@ export default function TaskList() {
                   </p>
                 </div>
                 <div className="flex gap-2">
+                  <button
+                    onClick={() => setScheduleModal({ taskId: task.id, taskTitle: task.title })}
+                    className="p-2 bg-purple-600 hover:bg-purple-500 text-white rounded-lg transition"
+                    title="Schedule Task"
+                  >
+                    <CalendarClock className="w-4 h-4" />
+                  </button>
                   {task.status === 'PENDING' && (
                     <button
                       onClick={() => handleExecute(task.id)}
@@ -266,6 +275,15 @@ export default function TaskList() {
           ))
         )}
       </div>
+
+      {scheduleModal && (
+        <ScheduleModal
+          taskId={scheduleModal.taskId}
+          taskTitle={scheduleModal.taskTitle}
+          onClose={() => setScheduleModal(null)}
+          onSuccess={() => loadTasks()}
+        />
+      )}
     </div>
   );
 }

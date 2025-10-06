@@ -53,6 +53,33 @@ export interface TaskRequest {
   enableWebSearch?: boolean;
 }
 
+export interface Schedule {
+  id: number;
+  taskId: number | null;
+  title: string;
+  prompt: string;
+  aiProvider: string;
+  enableWebSearch: boolean;
+  cronExpression: string;
+  startDate: string | null;
+  endDate: string | null;
+  enabled: boolean;
+  lastExecutedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ScheduleRequest {
+  taskId?: number;
+  title?: string;
+  prompt?: string;
+  aiProvider?: string;
+  enableWebSearch?: boolean;
+  cronExpression: string;
+  startDate?: string;
+  endDate?: string;
+}
+
 export const api = {
   async getCurrentUser(): Promise<User | null> {
     try {
@@ -276,6 +303,159 @@ export const api = {
       }
     } catch (error) {
       console.error('Failed to delete task:', error);
+      throw error;
+    }
+  },
+
+  // Schedule APIs
+  async getAllSchedules(): Promise<Schedule[]> {
+    try {
+      const response = await fetch(`${API_URL}/api/schedules`, {
+        credentials: 'include',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch schedules');
+      }
+
+      return response.json();
+    } catch (error) {
+      console.error('Failed to fetch schedules:', error);
+      throw error;
+    }
+  },
+
+  async getSchedulesByTask(taskId: number): Promise<Schedule[]> {
+    try {
+      const response = await fetch(`${API_URL}/api/schedules/task/${taskId}`, {
+        credentials: 'include',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch schedules');
+      }
+
+      return response.json();
+    } catch (error) {
+      console.error('Failed to fetch schedules:', error);
+      throw error;
+    }
+  },
+
+  async createSchedule(schedule: ScheduleRequest): Promise<Schedule> {
+    try {
+      const response = await fetch(`${API_URL}/api/schedules`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify(schedule),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create schedule');
+      }
+
+      return response.json();
+    } catch (error) {
+      console.error('Failed to create schedule:', error);
+      throw error;
+    }
+  },
+
+  async updateSchedule(id: number, schedule: Omit<ScheduleRequest, 'taskId'>): Promise<Schedule> {
+    try {
+      const response = await fetch(`${API_URL}/api/schedules/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify(schedule),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update schedule');
+      }
+
+      return response.json();
+    } catch (error) {
+      console.error('Failed to update schedule:', error);
+      throw error;
+    }
+  },
+
+  async toggleSchedule(id: number): Promise<Schedule> {
+    try {
+      const response = await fetch(`${API_URL}/api/schedules/${id}/toggle`, {
+        method: 'POST',
+        credentials: 'include',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to toggle schedule');
+      }
+
+      return response.json();
+    } catch (error) {
+      console.error('Failed to toggle schedule:', error);
+      throw error;
+    }
+  },
+
+  async deleteSchedule(id: number): Promise<void> {
+    try {
+      const response = await fetch(`${API_URL}/api/schedules/${id}`, {
+        method: 'DELETE',
+        credentials: 'include',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete schedule');
+      }
+    } catch (error) {
+      console.error('Failed to delete schedule:', error);
+      throw error;
+    }
+  },
+
+  // User Schedule APIs
+  async getMySchedules(): Promise<Schedule[]> {
+    try {
+      const response = await fetch(`${API_URL}/api/schedules/my`, {
+        credentials: 'include',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch my schedules');
+      }
+
+      return response.json();
+    } catch (error) {
+      console.error('Failed to fetch my schedules:', error);
+      throw error;
+    }
+  },
+
+  async createMySchedule(schedule: Omit<ScheduleRequest, 'taskId'>): Promise<Schedule> {
+    try {
+      const response = await fetch(`${API_URL}/api/schedules/my`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify(schedule),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create my schedule');
+      }
+
+      return response.json();
+    } catch (error) {
+      console.error('Failed to create my schedule:', error);
       throw error;
     }
   },
