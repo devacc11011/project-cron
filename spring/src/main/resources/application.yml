@@ -58,7 +58,6 @@ openai:
 
 discord:
   bot-token: ${DISCORD_BOT_TOKEN:}
-  user-id: ${DISCORD_USER_ID:}
 
 app:
   frontend:

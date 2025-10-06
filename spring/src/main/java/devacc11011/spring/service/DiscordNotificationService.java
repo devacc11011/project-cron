@@ -2,6 +2,7 @@ package devacc11011.spring.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import devacc11011.spring.entity.Task;
+import devacc11011.spring.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,14 +24,11 @@ public class DiscordNotificationService implements NotificationService {
     @Value("${discord.bot-token:}")
     private String botToken;
 
-    @Value("${discord.user-id:}")
-    private String userId;
-
     private static final String DISCORD_API_BASE = "https://discord.com/api/v10";
 
     @Override
     public boolean isEnabled() {
-        return botToken != null && !botToken.isEmpty() && userId != null && !userId.isEmpty();
+        return botToken != null && !botToken.isEmpty();
     }
 
     @Override
@@ -41,31 +39,39 @@ public class DiscordNotificationService implements NotificationService {
     @Override
     public void sendTaskCompletionNotification(Task task) {
         if (!isEnabled()) {
-            log.warn("Discord bot token or user ID is not configured.");
+            log.warn("Discord bot token is not configured.");
             return;
         }
 
+        User user = task.getUser();
+        if (user == null || user.getDiscordId() == null || user.getDiscordId().isEmpty()) {
+            log.warn("Task {} has no associated user with a Discord ID.", task.getId());
+            return;
+        }
+
+        String recipientId = user.getDiscordId();
+
         try {
-            getDmChannelId()
+            getDmChannelId(recipientId)
                 .flatMap(channelId -> sendMessage(channelId, task))
                 .block();
-            log.info("Discord DM notification sent for task: {}", task.getId());
+            log.info("Discord DM notification sent for task: {} to user {}", task.getId(), user.getUsername());
         } catch (Exception e) {
             log.error("Failed to send Discord DM notification for task: {}", task.getId(), e);
         }
     }
 
-    private Mono<String> getDmChannelId() {
+    private Mono<String> getDmChannelId(String recipientId) {
         WebClient webClient = webClientBuilder.baseUrl(DISCORD_API_BASE).build();
         return webClient.post()
             .uri("/users/@me/channels")
             .header("Authorization", "Bot " + botToken)
             .header("Content-Type", "application/json")
-            .bodyValue(Map.of("recipient_id", userId))
+            .bodyValue(Map.of("recipient_id", recipientId))
             .retrieve()
             .bodyToMono(JsonNode.class)
             .map(jsonNode -> jsonNode.get("id").asText())
-            .doOnError(e -> log.error("Failed to get DM channel ID", e));
+            .doOnError(e -> log.error("Failed to get DM channel ID for recipient {}", recipientId, e));
     }
 
     private Mono<Void> sendMessage(String channelId, Task task) {
