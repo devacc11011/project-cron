@@ -29,7 +29,7 @@ public class ScheduledTaskJob implements Job {
 
 		log.info("Executing scheduled task for schedule ID: {}", scheduleId);
 
-		Schedule schedule = scheduleRepository.findByIdWithUser(scheduleId).orElse(null);
+		Schedule schedule = scheduleRepository.findByIdWithDetails(scheduleId).orElse(null);
 		if (schedule == null) {
 			log.error("Schedule not found: {}", scheduleId);
 			return;

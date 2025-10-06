@@ -28,7 +28,7 @@ public class ScheduleService {
 	@PostConstruct
 	public void init() {
 		// 애플리케이션 시작 시 활성화된 모든 스케줄 등록
-		List<Schedule> activeSchedules = scheduleRepository.findByEnabledTrue();
+		List<Schedule> activeSchedules = scheduleRepository.findAllEnabledWithDetails();
 		for (Schedule schedule : activeSchedules) {
 			try {
 				registerQuartzJob(schedule);
@@ -44,7 +44,7 @@ public class ScheduleService {
 	}
 
 	public Schedule findById(Long id) {
-		return scheduleRepository.findById(id)
+		return scheduleRepository.findByIdWithDetails(id)
 			.orElseThrow(() -> new NotFoundException("Schedule not found with id: " + id));
 	}
 
