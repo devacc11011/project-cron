@@ -1,4 +1,4 @@
-# Project Cron - Claude AI 가이드
+# Project Cron - Gemini AI 가이드
 
 ## 프로젝트 구조
 
@@ -141,7 +141,7 @@ npm run start
 
 ---
 
-## Claude AI 작업 시 체크리스트
+## Gemini AI 작업 시 체크리스트
 
 ### 백엔드 작업 후
 - [ ] 새로운 기능에 대한 유닛 테스트 작성
