@@ -1,8 +1,10 @@
 package devacc11011.spring.service;
 
+import devacc11011.spring.dto.AIResponse;
+
 public interface AIService {
-	String executeTask(String prompt);
-	String executeTaskWithWebSearch(String prompt);
+	AIResponse executeTask(String prompt);
+	AIResponse executeTaskWithWebSearch(String prompt);
 	String getProviderName();
 	boolean isEnabled();
 }

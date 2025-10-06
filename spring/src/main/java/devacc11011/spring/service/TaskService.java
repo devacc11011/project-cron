@@ -1,5 +1,6 @@
 package devacc11011.spring.service;
 
+import devacc11011.spring.dto.AIResponse;
 import devacc11011.spring.dto.TaskRequest;
 import devacc11011.spring.entity.Task;
 import devacc11011.spring.entity.User;
@@ -22,6 +23,7 @@ public class TaskService {
 
 	private final TaskRepository taskRepository;
 	private final AIServiceFactory aiServiceFactory;
+	private final UserUsageService userUsageService;
 
 	public List<Task> findAllTasks() {
 		return taskRepository.findAllByOrderByCreatedAtDesc();
@@ -65,6 +67,16 @@ public class TaskService {
 	public void executeTask(Long taskId) {
 		Task task = findById(taskId);
 
+		// 사용량 체크 (예상 최대 토큰: 5000)
+		long estimatedTokens = 5000L;
+		if (!userUsageService.hasTokensAvailable(task.getUser(), estimatedTokens)) {
+			log.warn("User {} exceeded token limit", task.getUser().getUsername());
+			task.setStatus(Task.TaskStatus.FAILED);
+			task.setResult("Error: Monthly token limit exceeded. Please upgrade your plan or wait for next month.");
+			taskRepository.save(task);
+			return;
+		}
+
 		try {
 			task.setStatus(Task.TaskStatus.PROCESSING);
 			taskRepository.save(task);
@@ -72,20 +84,25 @@ public class TaskService {
 			AIService aiService = aiServiceFactory.getAIService(task.getAiProvider());
 
 			// 웹 검색 옵션에 따라 다른 메서드 호출
-			String result;
+			AIResponse response;
 			if (Boolean.TRUE.equals(task.getEnableWebSearch())) {
-				result = aiService.executeTaskWithWebSearch(task.getPrompt());
+				response = aiService.executeTaskWithWebSearch(task.getPrompt());
 				log.info("Task {} executing with web search enabled", taskId);
 			} else {
-				result = aiService.executeTask(task.getPrompt());
+				response = aiService.executeTask(task.getPrompt());
 			}
 
-			task.setResult(result);
+			task.setResult(response.getText());
+			task.setTokensUsed(response.getTokensUsed());
 			task.setStatus(Task.TaskStatus.COMPLETED);
 			task.setExecutedAt(LocalDateTime.now());
 			taskRepository.save(task);
 
-			log.info("Task {} completed successfully with {}", taskId, aiService.getProviderName());
+			// 실제 사용된 토큰 업데이트
+			userUsageService.addTokensUsed(task.getUser(), response.getTokensUsed());
+
+			log.info("Task {} completed successfully with {} ({} tokens used)",
+				taskId, aiService.getProviderName(), response.getTokensUsed());
 		} catch (Exception e) {
 			log.error("Task {} failed", taskId, e);
 			task.setStatus(Task.TaskStatus.FAILED);

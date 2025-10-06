@@ -1,5 +1,6 @@
 package devacc11011.spring.service;
 
+import devacc11011.spring.dto.AIResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,18 +32,18 @@ public class ChatGPTService implements AIService {
 	}
 
 	@Override
-	public String executeTask(String prompt) {
+	public AIResponse executeTask(String prompt) {
 		return executeChatGPTRequest(prompt, false);
 	}
 
 	@Override
-	public String executeTaskWithWebSearch(String prompt) {
+	public AIResponse executeTaskWithWebSearch(String prompt) {
 		return executeChatGPTRequest(prompt, true);
 	}
 
-	private String executeChatGPTRequest(String prompt, boolean enableWebSearch) {
+	private AIResponse executeChatGPTRequest(String prompt, boolean enableWebSearch) {
 		if (!isEnabled()) {
-			return "ChatGPT API is disabled (API key not configured)";
+			return AIResponse.ofTextOnly("ChatGPT API is disabled (API key not configured)");
 		}
 
 		try {
@@ -76,20 +77,25 @@ public class ChatGPTService implements AIService {
 				"messages", messages
 			);
 
-			String response = webClient.post()
+			Map<String, Object> responseMap = webClient.post()
 				.uri(OPENAI_API_URL)
 				.header("Authorization", "Bearer " + apiKey)
 				.header("Content-Type", "application/json")
 				.bodyValue(requestBody)
 				.retrieve()
 				.bodyToMono(Map.class)
-				.map(this::extractTextFromResponse)
 				.block();
 
-			return response != null ? response : "Failed to get response from OpenAI API";
+			if (responseMap != null) {
+				String text = extractTextFromResponse(responseMap);
+				Long tokensUsed = extractTokenUsage(responseMap);
+				return AIResponse.of(text, tokensUsed);
+			}
+
+			return AIResponse.ofTextOnly("Failed to get response from OpenAI API");
 		} catch (Exception e) {
 			log.error("Error calling OpenAI API", e);
-			return "Error: " + e.getMessage();
+			return AIResponse.ofTextOnly("Error: " + e.getMessage());
 		}
 	}
 
@@ -109,5 +115,22 @@ public class ChatGPTService implements AIService {
 			log.error("Error extracting text from response", e);
 		}
 		return "Failed to extract text from response";
+	}
+
+	private Long extractTokenUsage(Map<String, Object> response) {
+		try {
+			Map<String, Object> usage = (Map<String, Object>) response.get("usage");
+			if (usage != null) {
+				Object totalTokens = usage.get("total_tokens");
+				if (totalTokens instanceof Integer) {
+					return ((Integer) totalTokens).longValue();
+				} else if (totalTokens instanceof Long) {
+					return (Long) totalTokens;
+				}
+			}
+		} catch (Exception e) {
+			log.error("Error extracting token usage from response", e);
+		}
+		return 0L;
 	}
 }

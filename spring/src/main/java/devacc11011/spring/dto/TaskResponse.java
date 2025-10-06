@@ -21,6 +21,7 @@ public class TaskResponse {
 	private String status;
 	private String aiProvider;
 	private Boolean enableWebSearch;
+	private Long tokensUsed;
 	private UserInfo user;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
@@ -44,6 +45,7 @@ public class TaskResponse {
 			.status(task.getStatus().name())
 			.aiProvider(task.getAiProvider())
 			.enableWebSearch(task.getEnableWebSearch())
+			.tokensUsed(task.getTokensUsed())
 			.user(UserInfo.builder()
 				.discordId(task.getUser().getDiscordId())
 				.username(task.getUser().getUsername())

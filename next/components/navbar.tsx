@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { AuthButton } from './auth-button';
+import { UsageBadge } from './usage-badge';
 import { Terminal } from 'lucide-react';
 
 export function Navbar() {
@@ -46,7 +47,10 @@ export function Navbar() {
               </Link>
             </div>
           </div>
-          <AuthButton />
+          <div className="flex items-center gap-3">
+            <UsageBadge />
+            <AuthButton />
+          </div>
         </div>
       </div>
     </nav>

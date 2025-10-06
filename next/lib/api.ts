@@ -37,6 +37,7 @@ export interface Task {
   status: string;
   aiProvider: string;
   enableWebSearch: boolean;
+  tokensUsed: number | null;
   user: {
     discordId: string;
     username: string;
@@ -459,4 +460,30 @@ export const api = {
       throw error;
     }
   },
+
+  // User Usage APIs
+  async getCurrentUsage(): Promise<UserUsage> {
+    try {
+      const response = await fetch(`${API_URL}/api/usage/current`, {
+        credentials: 'include',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch current usage');
+      }
+
+      return response.json();
+    } catch (error) {
+      console.error('Failed to fetch current usage:', error);
+      throw error;
+    }
+  },
 };
+
+export interface UserUsage {
+  yearMonth: string;
+  totalTokensUsed: number;
+  tokenLimit: number;
+  remainingTokens: number;
+  usagePercentage: number;
+}

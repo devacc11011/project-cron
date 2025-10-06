@@ -1,5 +1,6 @@
 package devacc11011.spring.service;
 
+import devacc11011.spring.dto.AIResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,18 +31,18 @@ public class GeminiService implements AIService {
 	}
 
 	@Override
-	public String executeTask(String prompt) {
+	public AIResponse executeTask(String prompt) {
 		return executeGeminiRequest(prompt, false);
 	}
 
 	@Override
-	public String executeTaskWithWebSearch(String prompt) {
+	public AIResponse executeTaskWithWebSearch(String prompt) {
 		return executeGeminiRequest(prompt, true);
 	}
 
-	private String executeGeminiRequest(String prompt, boolean enableGrounding) {
+	private AIResponse executeGeminiRequest(String prompt, boolean enableGrounding) {
 		if (!isEnabled()) {
-			return "Gemini API is disabled (API key not configured)";
+			return AIResponse.ofTextOnly("Gemini API is disabled (API key not configured)");
 		}
 
 		try {
@@ -83,19 +84,24 @@ public class GeminiService implements AIService {
 				);
 			}
 
-			String response = webClient.post()
+			Map<String, Object> responseMap = webClient.post()
 				.uri(GEMINI_API_URL + "?key=" + apiKey)
 				.header("Content-Type", "application/json")
 				.bodyValue(requestBody)
 				.retrieve()
 				.bodyToMono(Map.class)
-				.map(this::extractTextFromResponse)
 				.block();
 
-			return response != null ? response : "Failed to get response from Gemini API";
+			if (responseMap != null) {
+				String text = extractTextFromResponse(responseMap);
+				Long tokensUsed = extractTokenUsage(responseMap);
+				return AIResponse.of(text, tokensUsed);
+			}
+
+			return AIResponse.ofTextOnly("Failed to get response from Gemini API");
 		} catch (Exception e) {
 			log.error("Error calling Gemini API", e);
-			return "Error: " + e.getMessage();
+			return AIResponse.ofTextOnly("Error: " + e.getMessage());
 		}
 	}
 
@@ -118,5 +124,22 @@ public class GeminiService implements AIService {
 			log.error("Error extracting text from response", e);
 		}
 		return "Failed to extract text from response";
+	}
+
+	private Long extractTokenUsage(Map<String, Object> response) {
+		try {
+			Map<String, Object> usageMetadata = (Map<String, Object>) response.get("usageMetadata");
+			if (usageMetadata != null) {
+				Object totalTokenCount = usageMetadata.get("totalTokenCount");
+				if (totalTokenCount instanceof Integer) {
+					return ((Integer) totalTokenCount).longValue();
+				} else if (totalTokenCount instanceof Long) {
+					return (Long) totalTokenCount;
+				}
+			}
+		} catch (Exception e) {
+			log.error("Error extracting token usage from response", e);
+		}
+		return 0L;
 	}
 }

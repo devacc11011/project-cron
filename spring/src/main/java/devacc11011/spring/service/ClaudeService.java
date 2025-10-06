@@ -1,5 +1,6 @@
 package devacc11011.spring.service;
 
+import devacc11011.spring.dto.AIResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,18 +32,18 @@ public class ClaudeService implements AIService {
 	}
 
 	@Override
-	public String executeTask(String prompt) {
+	public AIResponse executeTask(String prompt) {
 		return executeClaudeRequest(prompt, false);
 	}
 
 	@Override
-	public String executeTaskWithWebSearch(String prompt) {
+	public AIResponse executeTaskWithWebSearch(String prompt) {
 		return executeClaudeRequest(prompt, true);
 	}
 
-	private String executeClaudeRequest(String prompt, boolean enableWebSearch) {
+	private AIResponse executeClaudeRequest(String prompt, boolean enableWebSearch) {
 		if (!isEnabled()) {
-			return "Claude API is disabled (API key not configured)";
+			return AIResponse.ofTextOnly("Claude API is disabled (API key not configured)");
 		}
 
 		try {
@@ -76,7 +77,7 @@ public class ClaudeService implements AIService {
 				);
 			}
 
-			String response = webClient.post()
+			Map<String, Object> responseMap = webClient.post()
 				.uri(CLAUDE_API_URL)
 				.header("x-api-key", apiKey)
 				.header("anthropic-version", CLAUDE_VERSION)
@@ -84,13 +85,18 @@ public class ClaudeService implements AIService {
 				.bodyValue(requestBody)
 				.retrieve()
 				.bodyToMono(Map.class)
-				.map(this::extractTextFromResponse)
 				.block();
 
-			return response != null ? response : "Failed to get response from Claude API";
+			if (responseMap != null) {
+				String text = extractTextFromResponse(responseMap);
+				Long tokensUsed = extractTokenUsage(responseMap);
+				return AIResponse.of(text, tokensUsed);
+			}
+
+			return AIResponse.ofTextOnly("Failed to get response from Claude API");
 		} catch (Exception e) {
 			log.error("Error calling Claude API", e);
-			return "Error: " + e.getMessage();
+			return AIResponse.ofTextOnly("Error: " + e.getMessage());
 		}
 	}
 
@@ -109,5 +115,35 @@ public class ClaudeService implements AIService {
 			log.error("Error extracting text from response", e);
 		}
 		return "Failed to extract text from response";
+	}
+
+	private Long extractTokenUsage(Map<String, Object> response) {
+		try {
+			Map<String, Object> usage = (Map<String, Object>) response.get("usage");
+			if (usage != null) {
+				Object inputTokens = usage.get("input_tokens");
+				Object outputTokens = usage.get("output_tokens");
+
+				long input = 0L;
+				long output = 0L;
+
+				if (inputTokens instanceof Integer) {
+					input = ((Integer) inputTokens).longValue();
+				} else if (inputTokens instanceof Long) {
+					input = (Long) inputTokens;
+				}
+
+				if (outputTokens instanceof Integer) {
+					output = ((Integer) outputTokens).longValue();
+				} else if (outputTokens instanceof Long) {
+					output = (Long) outputTokens;
+				}
+
+				return input + output;
+			}
+		} catch (Exception e) {
+			log.error("Error extracting token usage from response", e);
+		}
+		return 0L;
 	}
 }
