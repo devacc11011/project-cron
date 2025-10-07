@@ -80,7 +80,6 @@ docker run -d \
     -p "${FRONTEND_PORT}:3000" \
     --env-file ~/.env.next \
     --restart unless-stopped \
-    -e "NEXT_PUBLIC_API_URL=http://localhost:${BACKEND_PORT}" \
     "${PROJECT_NAME}-frontend:${BRANCH}"
 
 echo "=========================================="
