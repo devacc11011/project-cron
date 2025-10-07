@@ -72,6 +72,7 @@ fi
 docker run -d \
     --name "${PROJECT_NAME}-backend" \
     -p "${BACKEND_PORT}:8080" \
+    --add-host=host.docker.internal:host-gateway \
     --env-file ~/.env.spring \
     --restart unless-stopped \
     "${PROJECT_NAME}-backend:${BRANCH}"
