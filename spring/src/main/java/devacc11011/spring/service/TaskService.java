@@ -63,6 +63,7 @@ public class TaskService {
 			.aiProvider(provider)
 			.enableWebSearch(enableWebSearch)
 			.notificationType(notificationType)
+			.notificationEmail(request.getNotificationEmail())
 			.user(user)
 			.build();
 
@@ -128,7 +129,13 @@ public class TaskService {
 		try {
 			NotificationService notificationService = notificationServiceFactory.getNotificationService(task.getNotificationType());
 			if (notificationService.isEnabled()) {
-				notificationService.sendTaskCompletionNotification(task);
+				// 이메일 알림인 경우 notificationEmail 필드 사용
+				if ("email".equals(task.getNotificationType()) && task.getNotificationEmail() != null && !task.getNotificationEmail().isEmpty()) {
+					EmailNotificationService emailService = (EmailNotificationService) notificationService;
+					emailService.sendTaskCompletionNotification(task, task.getNotificationEmail());
+				} else {
+					notificationService.sendTaskCompletionNotification(task);
+				}
 			} else {
 				log.warn("Notification service {} is not enabled", task.getNotificationType());
 			}

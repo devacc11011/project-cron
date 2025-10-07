@@ -46,6 +46,9 @@ public class Schedule {
 	@Builder.Default
 	private String notificationType = "discord";
 
+	@Column(name = "notification_email", length = 255)
+	private String notificationEmail;
+
 	@Column(name = "cron_expression", nullable = false, length = 100)
 	private String cronExpression;
 
