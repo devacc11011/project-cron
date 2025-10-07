@@ -15,10 +15,12 @@ public class CustomOAuth2User implements OAuth2User {
 
 	private final User user;
 	private final Map<String, Object> attributes;
+	private final String registrationId;
 
-	public CustomOAuth2User(User user, Map<String, Object> attributes) {
+	public CustomOAuth2User(User user, Map<String, Object> attributes, String registrationId) {
 		this.user = user;
 		this.attributes = attributes;
+		this.registrationId = registrationId;
 	}
 
 	@Override
@@ -35,6 +37,11 @@ public class CustomOAuth2User implements OAuth2User {
 
 	@Override
 	public String getName() {
-		return user.getDiscordId();
+		if ("google".equals(registrationId)) {
+			return user.getGoogleId();
+		} else if ("discord".equals(registrationId)) {
+			return user.getDiscordId();
+		}
+		return user.getUsername();
 	}
 }

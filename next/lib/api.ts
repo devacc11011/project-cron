@@ -122,6 +122,10 @@ export const api = {
     return `${API_URL}/oauth2/authorization/discord`;
   },
 
+  getGoogleLoginUrl(): string {
+    return `${API_URL}/oauth2/authorization/google`;
+  },
+
   // Notice APIs
   async getAllNotices(): Promise<Notice[]> {
     try {
