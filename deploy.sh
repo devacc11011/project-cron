@@ -40,7 +40,14 @@ echo "[3/5] Docker 이미지 빌드 중..."
 echo "  - 백엔드 이미지 빌드..."
 docker build -f Dockerfile.backend -t "${PROJECT_NAME}-backend:${BRANCH}" .
 echo "  - 프론트엔드 이미지 빌드..."
+# Next.js 빌드를 위해 환경변수 파일 복사
+if [ ! -f ~/.env.next ]; then
+    echo "오류: ~/.env.next 파일을 찾을 수 없습니다."
+    exit 1
+fi
+cp ~/.env.next "${DEPLOY_DIR}/next/.env"
 docker build -f Dockerfile.frontend -t "${PROJECT_NAME}-frontend:${BRANCH}" .
+rm -f "${DEPLOY_DIR}/next/.env"
 
 # 4. 기존 컨테이너 중지 및 제거
 echo "[4/5] 기존 컨테이너 중지 및 제거 중..."
