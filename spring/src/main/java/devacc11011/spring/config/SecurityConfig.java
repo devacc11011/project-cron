@@ -39,6 +39,17 @@ public class SecurityConfig {
 					.userService(customOAuth2UserService)
 				)
 				.successHandler(oAuth2LoginSuccessHandler)
+			)
+			.exceptionHandling(exceptions -> exceptions
+				.authenticationEntryPoint((request, response, authException) -> {
+					// /api/auth/** 경로는 401 반환, 나머지는 OAuth2 로그인으로 리다이렉트
+					String requestUri = request.getRequestURI();
+					if (requestUri.startsWith("/api/auth/")) {
+						response.sendError(401, "Unauthorized");
+					} else {
+						response.sendRedirect("/oauth2/authorization/discord");
+					}
+				})
 			);
 
 		return http.build();
