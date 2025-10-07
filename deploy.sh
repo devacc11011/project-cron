@@ -49,8 +49,18 @@ cp ~/.env.next "${DEPLOY_DIR}/next/.env"
 docker build -f Dockerfile.frontend -t "${PROJECT_NAME}-frontend:${BRANCH}" .
 rm -f "${DEPLOY_DIR}/next/.env"
 
-# 4. 기존 컨테이너 중지 및 제거
-echo "[4/5] 기존 컨테이너 중지 및 제거 중..."
+# 4. Docker 네트워크 생성
+echo "[4/6] Docker 네트워크 설정 중..."
+NETWORK_NAME="${PROJECT_NAME}-network"
+if [ ! "$(docker network ls -q -f name=${NETWORK_NAME})" ]; then
+    echo "  - 네트워크 생성: ${NETWORK_NAME}"
+    docker network create "${NETWORK_NAME}"
+else
+    echo "  - 네트워크가 이미 존재합니다: ${NETWORK_NAME}"
+fi
+
+# 5. 기존 컨테이너 중지 및 제거
+echo "[5/6] 기존 컨테이너 중지 및 제거 중..."
 if [ "$(docker ps -aq -f name=${PROJECT_NAME}-backend)" ]; then
     docker stop "${PROJECT_NAME}-backend" || true
     docker rm "${PROJECT_NAME}-backend" || true
@@ -60,8 +70,8 @@ if [ "$(docker ps -aq -f name=${PROJECT_NAME}-frontend)" ]; then
     docker rm "${PROJECT_NAME}-frontend" || true
 fi
 
-# 5. 새 컨테이너 실행
-echo "[5/5] 컨테이너 실행 중..."
+# 6. 새 컨테이너 실행
+echo "[6/6] 컨테이너 실행 중..."
 
 # 백엔드 컨테이너 실행
 echo "  - 백엔드 컨테이너 실행..."
@@ -71,8 +81,8 @@ if [ ! -f ~/.env.spring ]; then
 fi
 docker run -d \
     --name "${PROJECT_NAME}-backend" \
+    --network "${NETWORK_NAME}" \
     -p "${BACKEND_PORT}:8080" \
-    --add-host=host.docker.internal:host-gateway \
     --env-file ~/.env.spring \
     --restart unless-stopped \
     "${PROJECT_NAME}-backend:${BRANCH}"
@@ -85,6 +95,7 @@ if [ ! -f ~/.env.next ]; then
 fi
 docker run -d \
     --name "${PROJECT_NAME}-frontend" \
+    --network "${NETWORK_NAME}" \
     -p "${FRONTEND_PORT}:3000" \
     --env-file ~/.env.next \
     --restart unless-stopped \
