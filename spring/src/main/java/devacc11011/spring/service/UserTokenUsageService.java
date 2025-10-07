@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -66,5 +67,9 @@ public class UserTokenUsageService {
 	@Transactional
 	public UserTokenUsage getCurrentMonthUsage(User user) {
 		return getOrCreateCurrentMonthUsage(user);
+	}
+
+	public List<UserTokenUsage> findAllTokenUsages() {
+		return userTokenUsageRepository.findAll();
 	}
 }

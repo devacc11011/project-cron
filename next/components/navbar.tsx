@@ -3,9 +3,21 @@
 import Link from 'next/link';
 import { AuthButton } from './auth-button';
 import { UsageBadge } from './usage-badge';
-import { Terminal } from 'lucide-react';
+import { Terminal, Shield } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { api, User } from '@/lib/api';
 
 export function Navbar() {
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const currentUser = await api.getCurrentUser();
+      setUser(currentUser);
+    };
+    fetchUser();
+  }, []);
+
   return (
     <nav className="bg-black border-b border-zinc-800 backdrop-blur-sm bg-opacity-90 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -45,6 +57,15 @@ export function Navbar() {
               >
                 Tasks
               </Link>
+              {user && user.roles.includes('ADMIN') && (
+                <Link
+                  href="/admin"
+                  className="flex items-center gap-2 px-4 py-2 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-lg transition-all duration-200"
+                >
+                  <Shield className="w-4 h-4" />
+                  Admin
+                </Link>
+              )}
             </div>
           </div>
           <div className="flex items-center gap-3">

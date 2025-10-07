@@ -12,6 +12,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UserTokenUsageResponse {
 
+	private Long userId;
+	private String username;
 	private String yearMonth;
 	private Long totalTokensUsed;
 	private Long tokenLimit;
@@ -23,6 +25,8 @@ public class UserTokenUsageResponse {
 		double percentage = (usage.getTotalTokensUsed().doubleValue() / usage.getTokenLimit().doubleValue()) * 100;
 
 		return UserTokenUsageResponse.builder()
+			.userId(usage.getUser().getId())
+			.username(usage.getUser().getUsername())
 			.yearMonth(usage.getYearMonth())
 			.totalTokensUsed(usage.getTotalTokensUsed())
 			.tokenLimit(usage.getTokenLimit())

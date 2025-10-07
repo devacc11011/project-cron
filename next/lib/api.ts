@@ -463,6 +463,37 @@ export const api = {
     }
   },
 
+  // Admin APIs
+  async getAllUsersForAdmin(): Promise<User[]> {
+    try {
+      const response = await fetch(`${API_URL}/api/admin/users`, {
+        credentials: 'include',
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch users for admin');
+      }
+      return response.json();
+    } catch (error) {
+      console.error('Failed to fetch users for admin:', error);
+      throw error;
+    }
+  },
+
+  async getAllTokenUsagesForAdmin(): Promise<UserTokenUsage[]> {
+    try {
+      const response = await fetch(`${API_URL}/api/admin/token-usage`, {
+        credentials: 'include',
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch token usages for admin');
+      }
+      return response.json();
+    } catch (error) {
+      console.error('Failed to fetch token usages for admin:', error);
+      throw error;
+    }
+  },
+
   // User Usage APIs
   async getCurrentUsage(): Promise<UserTokenUsage> {
     try {
@@ -483,6 +514,8 @@ export const api = {
 };
 
 export interface UserTokenUsage {
+  userId: number;
+  username: string;
   yearMonth: string;
   totalTokensUsed: number;
   tokenLimit: number;
