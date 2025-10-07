@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { Activity } from "lucide-react";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8081';
+
 export function HealthIndicator() {
   const [isHealthy, setIsHealthy] = useState<boolean | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -10,7 +12,7 @@ export function HealthIndicator() {
   useEffect(() => {
     const checkHealth = async () => {
       try {
-        const response = await fetch("http://localhost:8080/api/health");
+        const response = await fetch(`${API_URL}/api/health`);
         setIsHealthy(response.ok);
       } catch {
         setIsHealthy(false);
