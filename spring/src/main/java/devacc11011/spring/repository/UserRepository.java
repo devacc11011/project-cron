@@ -11,5 +11,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 	Optional<User> findByDiscordId(String discordId);
 
+	Optional<User> findByGoogleId(String googleId);
+
 	boolean existsByDiscordId(String discordId);
+
+	boolean existsByGoogleId(String googleId);
 }

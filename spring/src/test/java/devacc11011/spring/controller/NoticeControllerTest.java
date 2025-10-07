@@ -95,7 +95,7 @@ class NoticeControllerTest {
 		attributes.put("username", "adminuser");
 		attributes.put("email", "admin@example.com");
 
-		adminOAuth2User = new CustomOAuth2User(adminUser, attributes);
+		adminOAuth2User = new CustomOAuth2User(adminUser, attributes, "discord");
 	}
 
 	@Test
@@ -159,7 +159,7 @@ class NoticeControllerTest {
 		userAttributes.put("username", "testuser");
 		userAttributes.put("email", "test@example.com");
 
-		CustomOAuth2User userOAuth2User = new CustomOAuth2User(testUser, userAttributes);
+		CustomOAuth2User userOAuth2User = new CustomOAuth2User(testUser, userAttributes, "discord");
 
 		mockMvc.perform(post("/api/notices")
 				.with(oauth2Login().oauth2User(userOAuth2User))
@@ -220,7 +220,7 @@ class NoticeControllerTest {
 		userAttributes.put("username", "testuser");
 		userAttributes.put("email", "test@example.com");
 
-		CustomOAuth2User userOAuth2User = new CustomOAuth2User(testUser, userAttributes);
+		CustomOAuth2User userOAuth2User = new CustomOAuth2User(testUser, userAttributes, "discord");
 
 		mockMvc.perform(delete("/api/notices/1")
 				.with(oauth2Login().oauth2User(userOAuth2User)))

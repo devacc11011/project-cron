@@ -57,7 +57,7 @@ class AuthControllerTest {
 		attributes.put("username", "testuser");
 		attributes.put("email", "test@example.com");
 
-		customOAuth2User = new CustomOAuth2User(testUser, attributes);
+		customOAuth2User = new CustomOAuth2User(testUser, attributes, "discord");
 	}
 
 	@Test
