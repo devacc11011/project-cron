@@ -16,5 +16,4 @@ public class TaskRequest {
 	private String aiProvider;
 	private Boolean enableWebSearch;
 	private String notificationType;
-	private String notificationEmail;
 }

@@ -23,7 +23,6 @@ export default function SchedulesPage() {
   const [aiProvider, setAiProvider] = useState('gemini');
   const [enableWebSearch, setEnableWebSearch] = useState(false);
   const [notificationType, setNotificationType] = useState('discord');
-  const [notificationEmail, setNotificationEmail] = useState('');
   const [cronPreset, setCronPreset] = useState('0 0 9 * * ?');
   const [cronExpression, setCronExpression] = useState('0 0 9 * * ?');
   const [startDate, setStartDate] = useState('');
@@ -61,7 +60,6 @@ export default function SchedulesPage() {
         aiProvider,
         enableWebSearch,
         notificationType,
-        notificationEmail: notificationEmail || undefined,
         cronExpression,
         startDate: startDate || undefined,
         endDate: endDate || undefined,
@@ -72,7 +70,6 @@ export default function SchedulesPage() {
       setAiProvider('gemini');
       setEnableWebSearch(false);
       setNotificationType('discord');
-      setNotificationEmail('');
       setCronExpression('0 0 9 * * ?');
       setCronPreset('0 0 9 * * ?');
       setStartDate('');
@@ -190,24 +187,9 @@ export default function SchedulesPage() {
                 className="w-full px-4 py-2 bg-black border border-zinc-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
               >
                 <option value="discord">Discord</option>
-                <option value="email">Email</option>
+                <option value="email">Email (Coming Soon)</option>
               </select>
             </div>
-
-            {notificationType === 'email' && (
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">Email Address</label>
-                <input
-                  type="email"
-                  value={notificationEmail}
-                  onChange={(e) => setNotificationEmail(e.target.value)}
-                  placeholder="your.email@example.com"
-                  className="w-full px-4 py-2 bg-black border border-zinc-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                  required={notificationType === 'email'}
-                />
-                <p className="text-xs text-gray-500 mt-1">Task results will be sent to this email address</p>
-              </div>
-            )}
 
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">Schedule Preset</label>

@@ -62,8 +62,6 @@ export interface Schedule {
   prompt: string;
   aiProvider: string;
   enableWebSearch: boolean;
-  notificationType: string;
-  notificationEmail: string | null;
   cronExpression: string;
   startDate: string | null;
   endDate: string | null;
@@ -80,7 +78,6 @@ export interface ScheduleRequest {
   aiProvider?: string;
   enableWebSearch?: boolean;
   notificationType?: string;
-  notificationEmail?: string;
   cronExpression: string;
   startDate?: string;
   endDate?: string;
