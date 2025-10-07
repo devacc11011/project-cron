@@ -73,6 +73,7 @@ public class ScheduledTaskJob implements Job {
 				.aiProvider(schedule.getAiProvider())
 				.enableWebSearch(schedule.getEnableWebSearch())
 				.notificationType(schedule.getNotificationType())
+				.notificationEmail(schedule.getNotificationEmail())
 				.build();
 
 			newTask = taskService.createTask(taskRequest, schedule.getUser());

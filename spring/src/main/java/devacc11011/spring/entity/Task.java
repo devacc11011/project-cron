@@ -48,6 +48,9 @@ public class Task {
 	@Builder.Default
 	private String notificationType = "discord";
 
+	@Column(name = "notification_email", length = 255)
+	private String notificationEmail;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id", nullable = false)
 	private User user;

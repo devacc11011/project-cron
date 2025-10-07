@@ -35,6 +35,19 @@ spring:
             user-info-uri: https://discord.com/api/users/@me
             user-name-attribute: id
 
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: test@example.com
+    password: test-password
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+
 app:
   frontend:
     url: http://localhost:3000
